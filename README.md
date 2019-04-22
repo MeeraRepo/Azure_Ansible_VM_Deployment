@@ -21,11 +21,12 @@ These instructions will get you a K8s Jumpbox up and running on your Azure Subsc
 ##### Step 1: Login to the Linux VM with username and password
 ##### Step 2: Check the version of Ansible
 ```
-$ sudo ansible --version
+      $ sudo ansible --version
 ```
 ##### Step 3: Generate SSH keys and copy the content of id_rsa.pub key
 ```
-$sudo ssh-keygen
+     $sudo ssh-keygen
+      
 Generating public/private rsa key pair.
 Enter file in which to save the key (/root/.ssh/id_rsa): 
 Enter passphrase (empty for no passphrase): 
@@ -63,7 +64,8 @@ $ export AZURE_TENANT=<security-principal-tenant>
 
 ##### Step 5: Create the k8jumpbox.yaml file
 ```
-$ sudo vi k8jumpbox.yaml
+   $ sudo vi k8jumpbox.yaml
+   
 # Description
 # ===========
 # This playbook create an Azure VM with public IP, and open 22 port for SSH, and add ssh public key to the VM.
@@ -152,7 +154,8 @@ $ sudo vi k8jumpbox.yaml
 ##### Step 6: Create a bash script file to install the required packages and Make this script globally available
 
 ```
-$ vi packages.sh
+      $ vi packages.sh
+      
 #!/bin/bash
 #" This Script will install the following packages on centos 7 "
 # - Docker
@@ -285,6 +288,39 @@ sleep 30
 ```
        $ ansible-playbook k8jumpbox.yaml
 ```
+The results of running the ansible command should look similar to the following output:
+
+```
+PLAY [Create Azure VM] *************************************************************************************************************************************************
+
+TASK [Gathering Facts] *************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Create a resource group] *****************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Create virtual network] ******************************************************************************************************************************************
+changed: [localhost]
+
+TASK [Add subnet] ******************************************************************************************************************************************************
+changed: [localhost]
+
+TASK [Create public IP address] ****************************************************************************************************************************************
+changed: [localhost]
+
+TASK [Create Network Security Group that allows SSH] *******************************************************************************************************************
+changed: [localhost]
+
+TASK [Create virtual network inteface card] ****************************************************************************************************************************
+[DEPRECATION WARNING]: Setting ip_configuration flatten is deprecated and will be removed. Using ip_configurations list to define the ip configuration. This feature
+will be removed in version 2.9. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+changed: [localhost]
+
+TASK [Create VM] *******************************************************************************************************************************************************
+changed: [localhost]
+
+TASK [Create VM Extension] *********************************************************************************************************************************************
+
 
 
 End with an example of getting some data out of the system or using it for a little demo
