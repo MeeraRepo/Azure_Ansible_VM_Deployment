@@ -149,11 +149,11 @@ $ export AZURE_TENANT=<security-principal-tenant>
       type_handler_version: 2.0
       settings:
         fileUris:
-        - 'https://clistoragesiva.blob.core.windows.net/jumpbox/jumpserver_pkgs.sh'
-        commandToExecute: "bash jumpserver_pkgs.sh"
+        - 'https://< copy the url of bash script>'
+        commandToExecute: "bash <script name>"
       state: present
 ```
-##### Step 6: Create a bash script file to install the required packages and Make this script globally available
+##### Step 6: Create a bash script file to install the required packages and Make this script global available
 ```
    $ vi packages.sh
 ```
