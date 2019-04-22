@@ -24,7 +24,7 @@ These instructions will get you a K8s Jumpbox up and running on your Azure Subsc
       $ sudo ansible --version
 ##### Step 3: Generate SSH keys and copy the content of id_rsa.pub key
 ```
-     $sudo ssh-keygen
+$sudo ssh-keygen
 ```
 ##### OUTPUT
 ```
@@ -62,7 +62,7 @@ $ export AZURE_SECRET=<security-principal-password>
 $ export AZURE_TENANT=<security-principal-tenant>
 ```
 
-# Step 5: Create the k8jumpbox.yaml file
+##### Step 5: Create the k8jumpbox.yaml file
 ```
    $ sudo vi k8jumpbox.yaml
 ```
