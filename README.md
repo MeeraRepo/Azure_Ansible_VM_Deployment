@@ -19,10 +19,140 @@ These instructions will get you a K8s Jumpbox up and running on your Azure Subsc
 
 ### Installing
 ##### Step 1: Login to the Linux VM with username and password
+##### Step 2: Check the version of Ansible
 ```
-ansible --version
+$ sudo ansible --version
 
 ```
+##### Step 3: Generate SSH keys and copy the content of id_rsa.pub key
+```
+$sudo ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:z6zTVQ/PJYt2o96DrVYClmfcqBG8Pdb8nzqY2m2HjeY ansible@ansiblevm
+The key's randomart image is:
++---[RSA 2048]----+
+|         .       |
+|          o      |
+|           * =   |
+|          * O B .|
+|        S. B + O.|
+|         +. = = =|
+|         .+ooB+.o|
+|        ..oo=Bo+.|
+|        .o.+*E=. |
++----[SHA256]-----+
+```
+##### Step 4: Use Ansible environment variables
+
+configure your Ansible credentials by exporting them as environment variables.
+
+In a terminal or Bash window, enter the following commands:
+
+```
+$ export AZURE_SUBSCRIPTION_ID=<your-subscription_id>
+$ export AZURE_CLIENT_ID=<security-principal-appid>
+$ export AZURE_SECRET=<security-principal-password>
+$ export AZURE_TENANT=<security-principal-tenant>
+
+```
+
+##### Step 4: Create the k8jumpbox.yaml file
+```
+$ sudo vi k8jumpbox.yaml
+# Description
+# ===========
+# This playbook create an Azure VM with public IP, and open 22 port for SSH, and add ssh public key to the VM.
+# This playbook create an Azure VM with public IP
+# Change variables below to customize your VM deployment
+
+- name: Create Azure VM
+  hosts: localhost
+  connection: local
+  vars:
+    resource_group: shaikansible
+    vm_name: testvm5
+    location: eastus
+    ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCrNmk6HL28K3PKMag1HSjE31cGRjjQgEQYlbjco/Vpf6lib1A3OWdmlIJ74zIih/MUPaviDyV3XjgAGs29LdN6lyUCA7qTjEMD/x9vUetPl80Ye30nrCDP8YEhMtw9CyNJvAFSbayvSyWN8lWu7YZ3VhhVvR8efjGkOp3H0cAc28iBCGVVXw9ZO0spQVjqbTkM2QhAvqucfulfH8m/Qe5YjeaNSwRSQ5WeJtK99rxCeO0qt/imGXP6NVFizPjZbdDwp9AgCevxA6keTzVZU5Y9bRIrzLuMqisSqVMMxYbzjXcmzai6rPO5/yGbso2Pl/wtIeCis0xlW5N1IcosSeRZ"
+  tasks:
+  - name: Create a resource group
+    azure_rm_resourcegroup:
+        name: "{{ resource_group }}"
+        location: "{{ location }}"
+  - name: Create virtual network
+    azure_rm_virtualnetwork:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}"
+      address_prefixes: "10.0.0.0/16"
+  - name: Add subnet
+    azure_rm_subnet:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}"
+      address_prefix: "10.0.1.0/24"
+      virtual_network: "{{ vm_name }}"
+  - name: Create public IP address
+    azure_rm_publicipaddress:
+      resource_group: "{{ resource_group }}"
+      allocation_method: Static
+      name: "{{ vm_name }}"
+  - name: Create Network Security Group that allows SSH
+    azure_rm_securitygroup:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}"
+      rules:
+        - name: SSH
+          protocol: Tcp
+          destination_port_range: 22
+          access: Allow
+          priority: 1001
+          direction: Inbound
+  - name: Create virtual network inteface card
+    azure_rm_networkinterface:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}"
+      virtual_network: "{{ vm_name }}"
+      subnet: "{{ vm_name }}"
+      public_ip_name: "{{ vm_name }}"
+      security_group: "{{ vm_name }}"
+  - name: Create VM
+    azure_rm_virtualmachine:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}"
+      vm_size: Standard_DS1_v2
+      admin_username: ansible
+      ssh_password_enabled: false
+      ssh_public_keys:
+        - path: /home/ansible/.ssh/authorized_keys
+          key_data: "{{ ssh_key }}"
+      network_interfaces: "{{ vm_name }}"
+      image:
+        offer: CentOS
+        publisher: OpenLogic
+        sku: '7.5'
+        version: latest
+  - name: Create VM Extension
+    azure_rm_virtualmachine_extension:
+      name: myvmextension
+      location: eastus
+      resource_group: shaikansible
+      virtual_machine_name: testvm5
+      publisher: Microsoft.Azure.Extensions
+      virtual_machine_extension_type: CustomScript
+      type_handler_version: 2.0
+      settings:
+        fileUris:
+        - 'https://clistoragesiva.blob.core.windows.net/jumpbox/jumpserver_pkgs.sh'
+        commandToExecute: "bash jumpserver_pkgs.sh"
+      state: present
+
+
+```
+
               
 
 And repeat
