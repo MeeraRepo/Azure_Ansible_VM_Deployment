@@ -17,19 +17,10 @@ These instructions will get you a K8s Jumpbox up and running on your Azure Subsc
 * Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)& [Azure Modules](https://docs.ansible.com/ansible/latest/scenario_guides/guide_azure.html) on newly created Linux VM.
 * Create a [Service Principle](https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest) on Azure using Azure Cli and make note of App ID & Secret 
 
-
-
-
-
-```
-Give examples
-```
-
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
 
-Say what the step will be
+
 
 ```
 Give the example
