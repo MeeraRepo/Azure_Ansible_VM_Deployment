@@ -8,11 +8,18 @@ For interacting with Azure services, Ansible includes a suite of Ansible cloud m
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a K8s Jumpbox up and running on your Azure Subscription. See deployment for notes on how to deploy.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+* Azure subscription - If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/?ref=microsoft.com&utm_source=microsoft.com&utm_medium=docs&utm_campaign=visualstudio).
+* Create a [Linux Virtual Machine](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-portal) which will act as a Ansible Master VM.
+* Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)& [Azure Modules](https://docs.ansible.com/ansible/latest/scenario_guides/guide_azure.html) on newly created Linux VM.
+* Create a [Service Principle](https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest) on Azure using Azure Cli and make note of App ID & Secret 
+
+
+
+
 
 ```
 Give examples
