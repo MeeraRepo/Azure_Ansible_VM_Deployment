@@ -19,11 +19,10 @@ These instructions will get you a K8s Jumpbox up and running on your Azure Subsc
 
 ### Installing
 ##### Step 1: Login to the Linux VM with username and password
-              Check the Ansible Version 
-              ```
-              ansible --version
-              
-              ```
+```
+ansible --version
+
+```
               
 
 And repeat
