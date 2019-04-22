@@ -25,7 +25,9 @@ These instructions will get you a K8s Jumpbox up and running on your Azure Subsc
 ##### Step 3: Generate SSH keys and copy the content of id_rsa.pub key
 ```
      $sudo ssh-keygen
-```   
+```
+##### OUTPUT
+```
 Generating public/private rsa key pair.
 Enter file in which to save the key (/root/.ssh/id_rsa): 
 Enter passphrase (empty for no passphrase): 
@@ -46,27 +48,26 @@ The key's randomart image is:
 |        ..oo=Bo+.|
 |        .o.+*E=. |
 +----[SHA256]-----+
-
+```
 
 ##### Step 4: Use Ansible environment variables
 
 configure your Ansible credentials by exporting them as environment variables.
 
 In a terminal or Bash window, enter the following commands:
-
-
+```
 $ export AZURE_SUBSCRIPTION_ID=<your-subscription_id>
 $ export AZURE_CLIENT_ID=<security-principal-appid>
 $ export AZURE_SECRET=<security-principal-password>
 $ export AZURE_TENANT=<security-principal-tenant>
-
+```
 
 # Step 5: Create the k8jumpbox.yaml file
 ```
    $ sudo vi k8jumpbox.yaml
-   
 ```
-   
+##### Sample file 
+```
 # Description
 # ===========
 # This playbook create an Azure VM with public IP, and open 22 port for SSH, and add ssh public key to the VM.
@@ -153,10 +154,11 @@ $ export AZURE_TENANT=<security-principal-tenant>
       state: present
 ```
 ##### Step 6: Create a bash script file to install the required packages and Make this script globally available
-
 ```
-      $ vi packages.sh
-      
+   $ vi packages.sh
+```
+##### sample file
+```
 #!/bin/bash
 #" This Script will install the following packages on centos 7 "
 # - Docker
@@ -286,11 +288,11 @@ sleep 30
 #End of the Script
 ```
 ##### Step 7: Run the Playbook 
+
 ```
        $ ansible-playbook k8jumpbox.yaml
 ```
-The results of running the ansible command should look similar to the following output:
-
+##### OUTPUT
 ```
 PLAY [Create Azure VM] *************************************************************************************************************************************************
 
@@ -325,11 +327,13 @@ changed: [localhost]
 
 PLAY RECAP *************************************************************************************************************************************************************
 localhost                  : ok=9    changed=7    unreachable=0    failed=0
+
 ```
 
 we have successfully deployed K8s Jumpbox on Azure 
 
 ##### Step 8: Test the Deployment with fallowing commands
+
 ```
       $ ssh ansible@<IP Address of VM>
       $ sudo git --help       ## To check the GIT Installation 
@@ -339,6 +343,7 @@ we have successfully deployed K8s Jumpbox on Azure
       $ sudo kubectl          ## To check the Kubectl Installation
       $ sudo helm --version   ## To check the Helm Installation
       $ sudo vncviewer        ## To check the VNCServer installation
+
 ```
 
 
