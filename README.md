@@ -62,7 +62,7 @@ $ export AZURE_TENANT=<security-principal-tenant>
 
 ```
 
-##### Step 4: Create the k8jumpbox.yaml file
+##### Step 5: Create the k8jumpbox.yaml file
 ```
 $ sudo vi k8jumpbox.yaml
 # Description
@@ -149,13 +149,138 @@ $ sudo vi k8jumpbox.yaml
         - 'https://clistoragesiva.blob.core.windows.net/jumpbox/jumpserver_pkgs.sh'
         commandToExecute: "bash jumpserver_pkgs.sh"
       state: present
-
+```
+##### Step 6: Create a bash script file to install the required packages and Make this script globally available
 
 ```
+$ vi packages.sh
+#!/bin/bash
+#" This Script will install the following packages on centos 7 "
+# - Docker
+# - AzureCLI
+# - Visual Studio Code
+# - Helm
+# - Kubectl
+# - git
+# - VNC
+#Author : SNP Technologies
+#Date   : 12-April-2019
 
-              
+#Installation of Docker
+curl -fsSL https://get.docker.com/ | sh
+sudo systemctl start docker
+echo "Docker Installation Completed"
+sleep 30
+echo "Azure CLI installatio starting"
+sleep 10
 
-And repeat
+#Installation of AzureCLI
+
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+sudo sh -c 'echo -e "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
+sudo yum install azure-cli -y
+sleep 30
+echo "Azure CLI installation Completed"
+echo "Starting Visual Studio Code Installation"
+sleep 10
+ 
+#Installation of Visual Studio Code
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+sudo touch /etc/yum.repos.d/vscode.repo
+sudo chmod 777 /etc/yum.repos.d/vscode.repo
+sudo cat > /etc/yum.repos.d/vscode.repo <<-EOF
+[code]
+name=Visual Studio Code
+baseurl=https://packages.microsoft.com/yumrepos/vscode
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+EOF
+sudo yum install code -y
+sudo chmod 644 /etc/yum.repos.d/vscode.repo
+
+sleep 30
+echo "Visual Studio Code Installation Completed"
+echo "Starting Helm Installation"
+sleep 10
+
+#Installation of Helm
+wget https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd64.tar.gz
+sudo tar -zxvf helm-v2.13.1-linux-amd64.tar.gz
+sudo mv linux-amd64/helm /usr/local/bin/helm
+
+sleep 30
+echo "Helm Installation Completed"
+echo "Starting Kubectl installation"
+sleep 10
+
+#Installation of Kubectl
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install -y docker-ce
+sudo touch /etc/yum.repos.d/kubernetes.repo
+sudo chmod 777 /etc/yum.repos.d/kubernetes.repo
+sudo cat > /etc/yum.repos.d/kubernetes.repo <<-EOF
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+       https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+sudo yum install -y  kubectl
+sudo chmod 644 /etc/yum.repos.d/kubernetes.repo
+
+sleep 30
+echo "Kubectl installation completed"
+echo "Starting GIT installation"
+sleep 10
+
+#Installation of GIT
+sudo yum install git -y
+sleep 10
+echo " GIT installation completed"
+sleep 10
+
+#installation of VNC Server
+sudo yum groupinstall -y "GNOME Desktop"
+sudo yum install tigervnc-server -y
+sudo cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver_ansible@:1.service
+#sudo cp /lib/systemd/system/vncserver@.service  /etc/systemd/system/vncserver@:1.service
+sudo sed -i 's/<USER>/ansible/g' /etc/systemd/system/vncserver_ansible@:1.service
+sudo cat /etc/systemd/system/vncserver_ansible@:1.service<<-EOF
+[Unit]
+Description=Remote desktop service (VNC)
+After=syslog.target network.target
+
+[Service]
+Type=forking
+User=ansible
+
+# Clean any existing files in /tmp/.X11-unix environment
+ExecStartPre=-/usr/bin/vncserver -kill %i
+ExecStart=/sbin/runuser -l ansible -c "/usr/bin/vncserver %i -geometry 800x800"
+PIDFile=/home/ansible/.vnc/%H%i.pid
+ExecStop=-/usr/bin/vncserver -kill %i
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl start vncserver_ansible@:1.service
+sudo systemctl enable vncserver_ansible@:1.service
+sudo systemctl start firewalld
+sudo firewall-cmd --permanent --add-service=vnc-server
+sudo firewall-cmd --permanent --add-port=5901/tcp
+sudo firewall-cmd --reload
+
+sleep 10
+echo " We have installed Docker,AzureCLI,Visual Studio Code,Helm and GIT"
+sleep 30
+#End of the Script
 
 ```
 until finished
