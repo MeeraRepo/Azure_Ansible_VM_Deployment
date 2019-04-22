@@ -1,4 +1,4 @@
-# Azure Infra Deployment using Ansible
+# K8s Jumpbox Deployment on Azure using Ansible
 
 Ansible is an open-source tool that automates cloud provisioning, configuration management, and application deployments. Using Ansible you can provision virtual machines, containers, network, and complete cloud infrastructures. In addition, Ansible allows you to automate the deployment and configuration of resources in your environment.
 
@@ -320,61 +320,26 @@ TASK [Create VM] ***************************************************************
 changed: [localhost]
 
 TASK [Create VM Extension] *********************************************************************************************************************************************
+changed: [localhost]
 
-
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
+PLAY RECAP *************************************************************************************************************************************************************
+localhost                  : ok=9    changed=7    unreachable=0    failed=0
 ```
 
-### And coding style tests
+we have successfully deployed K8s Jumpbox on Azure 
 
-Explain what these tests test and why
-
+##### Step 8: Test the Deployment with fallowing commands
 ```
-Give an example
+      $ ssh ansible@<IP Address of VM>
+      $ sudo git --help       ## To check the GIT Installation 
+      $ sudo az login         ## To check the Azure Cli Installation
+      $ sudo docker --help    ## To check the Docker Installation
+      $ sudo code             ## To check the VScode Installation
+      $ sudo kubectl          ## To check the Kubectl Installation
+      $ sudo helm --version   ## To check the Helm Installation
+      $ sudo vncviewer        ## To check the VNCServer installation
 ```
 
-## Deployment
 
-Add additional notes about how to deploy this on a live system
 
-## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
