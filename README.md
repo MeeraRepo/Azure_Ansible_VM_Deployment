@@ -16,16 +16,16 @@ These instructions will get you a K8s Jumpbox up and running on your Azure Subsc
 * Create a [Linux Virtual Machine](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-portal) which will act as a Ansible Master VM.
 * Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)& [Azure Modules](https://docs.ansible.com/ansible/latest/scenario_guides/guide_azure.html) on newly created Linux VM.
 * Create a [Service Principle](https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest) on Azure using Azure Cli and make note of App ID & Secret 
-```
+
 
 ### Installing
 ##### Step 1: Login to the Linux VM with username and password
 ##### Step 2: Check the version of Ansible
       $ sudo ansible --version
 ##### Step 3: Generate SSH keys and copy the content of id_rsa.pub key
-
+```
      $sudo ssh-keygen
-      
+```   
 Generating public/private rsa key pair.
 Enter file in which to save the key (/root/.ssh/id_rsa): 
 Enter passphrase (empty for no passphrase): 
@@ -46,7 +46,7 @@ The key's randomart image is:
 |        ..oo=Bo+.|
 |        .o.+*E=. |
 +----[SHA256]-----+
-```
+
 
 ##### Step 4: Use Ansible environment variables
 
@@ -54,17 +54,18 @@ configure your Ansible credentials by exporting them as environment variables.
 
 In a terminal or Bash window, enter the following commands:
 
-```
+
 $ export AZURE_SUBSCRIPTION_ID=<your-subscription_id>
 $ export AZURE_CLIENT_ID=<security-principal-appid>
 $ export AZURE_SECRET=<security-principal-password>
 $ export AZURE_TENANT=<security-principal-tenant>
 
-```
 
-##### Step 5: Create the k8jumpbox.yaml file
+# Step 5: Create the k8jumpbox.yaml file
 ```
    $ sudo vi k8jumpbox.yaml
+   
+```
    
 # Description
 # ===========
