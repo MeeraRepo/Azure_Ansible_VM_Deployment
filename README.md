@@ -22,7 +22,6 @@ These instructions will get you a K8s Jumpbox up and running on your Azure Subsc
 ##### Step 2: Check the version of Ansible
 ```
 $ sudo ansible --version
-
 ```
 ##### Step 3: Generate SSH keys and copy the content of id_rsa.pub key
 ```
@@ -278,13 +277,15 @@ sudo firewall-cmd --permanent --add-port=5901/tcp
 sudo firewall-cmd --reload
 
 sleep 10
-echo " We have installed Docker,AzureCLI,Visual Studio Code,Helm and GIT"
+echo " We have installed Docker,AzureCLI,Visual Studio Code,Helm,GIT & VNC"
 sleep 30
 #End of the Script
+```
+##### Step 7: Run the Playbook 
+```
+       $ ansible-playbook k8jumpbox.yaml
+```
 
-```
-until finished
-```
 
 End with an example of getting some data out of the system or using it for a little demo
 
