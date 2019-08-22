@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  vars:
+      resource_group: aksansibletest
+      name: aksansibletest
+      location: eastus
+  tasks:
+     - name: Ensure resource group exists
+       azure_rm_resourcegroup:
+           name: "{{ resource_group }}"
+           location: "{{ location }}"
+
+     - name: Create vnet
+       include_tasks: vnet.yml
+
+     - name: Create AKS
+       vars:
+           vnet_subnet_id: "{{ subnet.state.id }}"
+       include_tasks: aks.yml
+
+     - name: Show AKS cluster detail
+       debug:
+           var: aks

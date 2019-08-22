@@ -1,0 +1,5 @@
+---
+- host: AnsibleMaster
+  tasks:
+     - name: Install prometheus on AKS
+       script: /home/ansible/pramethus.sh
