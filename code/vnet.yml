@@ -1,0 +1,14 @@
+- name: Create vnet
+  azure_rm_virtualnetwork:
+      resource_group: "{{ resource_group }}"
+      name: "{{ name }}"
+      address_prefixes_cidr:
+          - 10.0.0.0/8
+
+- name: Create subnet
+  azure_rm_subnet:
+      resource_group: "{{ resource_group }}"
+      name: "{{ name }}"
+      address_prefix_cidr: 10.240.0.0/16
+      virtual_network_name: "{{ name }}"
+  register: subnet
